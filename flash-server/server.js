@@ -48,6 +48,10 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Unexpected server error.' });
 });
 
-app.listen(PORT, () => {
-  console.log(`FLASH API listening on port ${PORT}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`FLASH API listening on port ${PORT}`);
+  });
+}
+
+module.exports = app;
