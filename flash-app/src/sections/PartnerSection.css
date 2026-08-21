@@ -1,0 +1,26 @@
+.partner__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-14);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .partner__grid { grid-template-columns: 1fr 1fr; }
+}
+
+.partner--reverse .partner__grid {
+  direction: rtl;
+}
+.partner--reverse .partner__grid > * {
+  direction: ltr;
+}
+
+.partner__copy .section-heading { margin-top: var(--space-4); }
+
+.partner__cta { margin-top: var(--space-8); }
+
+.partner__visual {
+  display: flex;
+  justify-content: center;
+}

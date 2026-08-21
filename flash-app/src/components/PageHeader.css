@@ -1,0 +1,25 @@
+.page-header {
+  padding: var(--space-16) 0 var(--space-8);
+}
+
+@media (min-width: 900px) {
+  .page-header { padding: var(--space-20) 0 var(--space-8); }
+}
+
+.page-header__crumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--flash-gray-500);
+  margin-bottom: var(--space-8);
+}
+
+.page-header__crumb a:hover { color: var(--flash-white); }
+
+.page-header__title {
+  font-size: var(--text-6xl);
+  max-width: 24ch;
+}
+
+.page-header__lede { margin-left: 0; }

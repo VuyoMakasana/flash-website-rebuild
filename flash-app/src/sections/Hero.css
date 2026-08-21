@@ -1,0 +1,98 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding-top: var(--space-24);
+  padding-bottom: var(--space-24);
+}
+
+@media (min-width: 900px) {
+  .hero { padding-top: var(--space-32); padding-bottom: var(--space-32); }
+}
+
+.hero__glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+.hero__glow--amber {
+  width: 560px; height: 560px;
+  background: radial-gradient(circle, rgba(245,158,11,0.16), transparent 70%);
+  top: -10%; left: -12%;
+}
+.hero__glow--dim {
+  width: 460px; height: 460px;
+  background: radial-gradient(circle, rgba(120,90,255,0.08), transparent 70%);
+  bottom: -10%; right: -10%;
+}
+
+.hero__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-14);
+  align-items: center;
+}
+
+@media (min-width: 960px) {
+  .hero__grid {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: var(--space-10);
+  }
+}
+
+.hero__copy { text-align: center; }
+@media (min-width: 960px) {
+  .hero__copy { text-align: left; }
+}
+
+.hero__title {
+  font-size: var(--text-8xl);
+  margin-top: var(--space-4);
+  max-width: 16ch;
+}
+@media (min-width: 960px) {
+  .hero__title { margin-left: 0; }
+}
+
+.hero__sub {
+  font-size: var(--text-xl);
+  color: var(--flash-gray-400);
+  line-height: 1.7;
+  max-width: 34rem;
+  margin: var(--space-8) auto 0;
+}
+@media (min-width: 960px) {
+  .hero__sub { margin-left: 0; margin-right: 0; }
+}
+
+.hero__cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  justify-content: center;
+  margin-top: var(--space-10);
+}
+@media (min-width: 960px) {
+  .hero__cta-row { justify-content: flex-start; }
+}
+
+.hero__location {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  color: var(--flash-gray-500);
+  font-size: var(--text-sm);
+  margin-top: var(--space-8);
+}
+@media (min-width: 960px) {
+  .hero__location { justify-content: flex-start; }
+}
+
+.hero__visual {
+  display: flex;
+  justify-content: center;
+}

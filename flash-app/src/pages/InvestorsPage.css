@@ -1,0 +1,18 @@
+.investor-quote {
+  max-width: 44rem;
+}
+
+.investor-quote p {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  color: var(--flash-gray-200);
+  line-height: 1.4;
+}
+
+.investor-quote span {
+  display: block;
+  margin-top: var(--space-6);
+  color: var(--flash-amber-400);
+  font-weight: 700;
+  font-size: var(--text-sm);
+}

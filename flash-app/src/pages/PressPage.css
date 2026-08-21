@@ -1,0 +1,25 @@
+.press-facts {
+  margin-top: var(--space-10);
+  max-width: 36rem;
+}
+
+.press-facts__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding: var(--space-5) 0;
+  border-top: var(--border-subtle);
+}
+.press-facts__row:last-child { border-bottom: var(--border-subtle); }
+
+.press-facts__label {
+  color: var(--flash-gray-500);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.press-facts__value {
+  color: var(--flash-white);
+  font-weight: 600;
+  text-align: right;
+}

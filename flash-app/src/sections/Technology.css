@@ -1,0 +1,66 @@
+.tech__inner { text-align: center; }
+.tech__heading, .tech__lede { margin-left: auto; margin-right: auto; }
+.tech__heading { max-width: 22ch; }
+
+.tech__diagram {
+  margin-top: var(--space-20);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tech__hub {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-xl);
+  letter-spacing: 0.02em;
+  width: 6.5rem;
+  height: 6.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--flash-amber-400);
+  color: var(--flash-black);
+  box-shadow: var(--shadow-amber);
+}
+
+.tech__nodes {
+  margin-top: var(--space-10);
+  display: flex;
+  gap: var(--space-10);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tech__node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--flash-gray-300);
+  position: relative;
+}
+
+.tech__connector {
+  position: absolute;
+  top: -3.2rem;
+  left: 50%;
+  width: 1px;
+  height: 2.5rem;
+  background: rgba(245,158,11,0.3);
+}
+
+.tech__node-badge {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--border-light);
+  background: var(--flash-surface);
+  color: var(--flash-amber-400);
+}

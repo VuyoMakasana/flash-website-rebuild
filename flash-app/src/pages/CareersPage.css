@@ -1,0 +1,25 @@
+.careers-roles {
+  margin-top: var(--space-12);
+  display: flex;
+  flex-direction: column;
+}
+
+.careers-roles__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-6) 0;
+  border-top: var(--border-subtle);
+}
+.careers-roles__item:last-child { border-bottom: var(--border-subtle); }
+
+.careers-roles__item h3 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-1);
+}
+
+.careers-roles__item span {
+  font-size: var(--text-sm);
+  color: var(--flash-gray-500);
+}
