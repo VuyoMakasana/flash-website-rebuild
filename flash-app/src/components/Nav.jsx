@@ -64,7 +64,7 @@ export default function Nav() {
 
         <nav className="nav__links" aria-label="Primary">
           {LINKS.map((link) => (
-            <a key={link.href} href={link.href}>{link.label}</a>
+            <Link key={link.href} to={link.href}>{link.label}</Link>
           ))}
         </nav>
 
@@ -92,9 +92,9 @@ export default function Nav() {
       >
         <nav aria-label="Mobile">
           {LINKS.map((link) => (
-            <a key={link.href} href={link.href} onClick={handleLinkClick}>
+            <Link key={link.href} to={link.href} onClick={handleLinkClick}>
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
         <span className="nav__panel-tag">Port Elizabeth, South Africa — Coming Soon</span>
