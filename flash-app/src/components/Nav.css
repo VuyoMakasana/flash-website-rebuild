@@ -2,6 +2,14 @@
   position: sticky;
   top: 0;
   z-index: var(--z-nav);
+}
+
+/* Background, blur, and shadow live on this inner bar rather than the
+   outer <header>. backdrop-filter (like transform/filter) makes an element
+   the positioning anchor for any position:fixed descendants — since the
+   mobile menu panel is fixed and lives inside <header>, putting the blur on
+   the header itself broke the panel's full-screen positioning on phones. */
+.nav__bar {
   background: rgba(8,8,8,0.72);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -82,6 +90,7 @@
 .nav__panel {
   position: fixed;
   inset: var(--nav-h) 0 0 0;
+  z-index: var(--z-overlay);
   background: var(--flash-black);
   display: flex;
   flex-direction: column;

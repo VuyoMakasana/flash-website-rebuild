@@ -59,28 +59,30 @@ export default function Nav() {
 
   return (
     <header className="nav">
-      <div className="container nav__row">
-        <Link to="/" className="nav__wordmark">FLASH</Link>
+      <div className="nav__bar">
+        <div className="container nav__row">
+          <Link to="/" className="nav__wordmark">FLASH</Link>
 
-        <nav className="nav__links" aria-label="Primary">
-          {LINKS.map((link) => (
-            <Link key={link.href} to={link.href}>{link.label}</Link>
-          ))}
-        </nav>
+          <nav className="nav__links" aria-label="Primary">
+            {LINKS.map((link) => (
+              <Link key={link.href} to={link.href}>{link.label}</Link>
+            ))}
+          </nav>
 
-        <div className="nav__actions">
-          <span className="nav__soon">Coming Soon</span>
-          <AudioControl />
-          <button
-            ref={toggleRef}
-            type="button"
-            className="nav__toggle"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-          >
-            {open ? 'Close' : 'Menu'}
-          </button>
+          <div className="nav__actions">
+            <span className="nav__soon">Coming Soon</span>
+            <AudioControl />
+            <button
+              ref={toggleRef}
+              type="button"
+              className="nav__toggle"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+            >
+              {open ? 'Close' : 'Menu'}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -89,8 +91,9 @@ export default function Nav() {
         ref={panelRef}
         className={`nav__panel ${open ? 'nav__panel--open' : ''}`}
         aria-hidden={!open}
+        onClick={() => setOpen(false)}
       >
-        <nav aria-label="Mobile">
+        <nav aria-label="Mobile" onClick={(e) => e.stopPropagation()}>
           {LINKS.map((link) => (
             <Link key={link.href} to={link.href} onClick={handleLinkClick}>
               {link.label}
