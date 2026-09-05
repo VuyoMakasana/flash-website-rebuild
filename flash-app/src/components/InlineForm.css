@@ -55,6 +55,11 @@
   font-size: var(--text-sm);
 }
 
+.inline-form__hint {
+  color: var(--flash-gray-400);
+  font-size: var(--text-sm);
+}
+
 .inline-form__success {
   font-size: var(--text-lg);
   color: var(--flash-amber-400);

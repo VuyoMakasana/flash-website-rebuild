@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Reveal from './Reveal';
 import './InlineForm.css';
 
@@ -14,6 +14,10 @@ export default function InlineForm({ endpoint, submitLabel, successMessage, sele
   const [values, setValues] = useState({ name: '', email: '', select: selectOptions?.[0]?.value || '', message: '' });
   const [status, setStatus] = useState('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  const [slow, setSlow] = useState(false);
+  const slowTimerRef = useRef(null);
+
+  useEffect(() => () => clearTimeout(slowTimerRef.current), []);
 
   function update(field, value) {
     setValues((v) => ({ ...v, [field]: value }));
@@ -23,6 +27,10 @@ export default function InlineForm({ endpoint, submitLabel, successMessage, sele
     e.preventDefault();
     setStatus('loading');
     setErrorMsg('');
+    setSlow(false);
+    // The backend can take 10-20s to respond on a cold start. Reassure
+    // the person after a few seconds so "Sending..." doesn't read as stuck.
+    slowTimerRef.current = setTimeout(() => setSlow(true), 4000);
 
     const payload = { name: values.name, email: values.email, message: values.message };
     if (selectField === 'city') payload.city = values.select;
@@ -45,6 +53,9 @@ export default function InlineForm({ endpoint, submitLabel, successMessage, sele
     } catch {
       setErrorMsg('Could not reach the server. Please try again shortly.');
       setStatus('error');
+    } finally {
+      clearTimeout(slowTimerRef.current);
+      setSlow(false);
     }
   }
 
@@ -112,6 +123,12 @@ export default function InlineForm({ endpoint, submitLabel, successMessage, sele
       <button type="submit" className="btn btn--primary" disabled={status === 'loading'}>
         {status === 'loading' ? 'Sending\u2026' : submitLabel}
       </button>
+
+      {status === 'loading' && slow && (
+        <p className="inline-form__hint" role="status">
+          Still working \u2014 the first request can take a little longer to wake up. Hang tight.
+        </p>
+      )}
 
       {status === 'error' && <p className="inline-form__error" role="alert">{errorMsg}</p>}
     </Reveal>

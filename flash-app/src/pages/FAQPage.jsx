@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import Reveal from '../components/Reveal';
 import { IconChevron } from '../components/icons';
@@ -20,7 +21,7 @@ export default function FAQPage() {
         crumb="FAQ"
         eyebrow="Support"
         title="Frequently asked questions."
-        lede={<>Can&rsquo;t find what you&rsquo;re looking for? <a href="/contact" style={{ color: 'var(--flash-amber-400)' }}>Contact us directly</a> — we respond within one business day.</>}
+        lede={<>Can&rsquo;t find what you&rsquo;re looking for? <Link to="/contact" style={{ color: 'var(--flash-amber-400)' }}>Contact us directly</Link> — we respond within one business day.</>}
       />
 
       <section style={{ paddingTop: 0 }}>

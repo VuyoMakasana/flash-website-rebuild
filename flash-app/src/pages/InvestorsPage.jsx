@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import Reveal from '../components/Reveal';
 import InfoGrid from '../components/InfoGrid';
@@ -22,7 +23,7 @@ export default function InvestorsPage() {
 
       <section style={{ paddingTop: 0 }}>
         <div className="container">
-          <a className="btn btn--primary" href="/contact">Email the Founder</a>
+          <Link className="btn btn--primary" to="/contact">Email the Founder</Link>
         </div>
       </section>
 

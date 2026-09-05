@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import Reveal from '../components/Reveal';
 import InlineForm from '../components/InlineForm';
@@ -43,13 +44,13 @@ export default function ContactPage() {
             <Reveal delay={210} className="contact-channels__item">
               <h3>Seller Enquiries</h3>
               <p>Want to sell on Flash? Start your application.</p>
-              <a href="/stores">Apply to Sell</a>
+              <Link to="/stores">Apply to Sell</Link>
             </Reveal>
 
             <Reveal delay={280} className="contact-channels__item">
               <h3>Driver Applications</h3>
               <p>Ready to drive with Flash? Apply now.</p>
-              <a href="/drivers">Apply to Drive</a>
+              <Link to="/drivers">Apply to Drive</Link>
             </Reveal>
           </div>
         </div>

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import Reveal from '../components/Reveal';
 import InfoGrid from '../components/InfoGrid';
@@ -46,7 +47,7 @@ export default function CareersPage() {
                   <h3>{role.title}</h3>
                   <span>{role.meta}</span>
                 </div>
-                <a className="btn btn--ghost" href="/contact">Apply</a>
+                <Link className="btn btn--ghost" to="/contact">Apply</Link>
               </Reveal>
             ))}
           </div>
@@ -61,7 +62,7 @@ export default function CareersPage() {
             Tell us what you&rsquo;d build and why Flash is the right place for you.
           </Reveal>
           <Reveal delay={200} style={{ marginTop: 'var(--space-8)' }}>
-            <a className="btn btn--primary" href="/contact">Send a Speculative Application</a>
+            <Link className="btn btn--primary" to="/contact">Send a Speculative Application</Link>
           </Reveal>
         </div>
       </section>

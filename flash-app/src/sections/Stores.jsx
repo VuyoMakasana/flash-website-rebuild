@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Reveal from '../components/Reveal';
 import OrderCard from '../components/OrderCard';
 import { IconBolt } from '../components/icons';
@@ -16,7 +17,7 @@ export default function Stores() {
             routing and delivery — you focus on the clothes.
           </p>
           <div className="partner__cta">
-            <a className="btn btn--primary" href="/stores">Partner With FLASH</a>
+            <Link className="btn btn--primary" to="/stores">Partner With FLASH</Link>
           </div>
         </Reveal>
 

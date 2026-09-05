@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Reveal from '../components/Reveal';
 import OrderCard from '../components/OrderCard';
 import { IconDriver } from '../components/icons';
@@ -30,7 +31,7 @@ export default function Drivers() {
             route, and track what you&rsquo;ve earned as you go.
           </p>
           <div className="partner__cta">
-            <a className="btn btn--primary" href="/drivers">Drive With FLASH</a>
+            <Link className="btn btn--primary" to="/drivers">Drive With FLASH</Link>
           </div>
         </Reveal>
       </div>

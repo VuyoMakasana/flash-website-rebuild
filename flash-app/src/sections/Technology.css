@@ -29,8 +29,12 @@
   margin-top: var(--space-10);
   display: flex;
   gap: var(--space-10);
-  flex-wrap: wrap;
+  /* Nodes must never wrap — each node's connector is a fixed-length line
+     positioned relative to that node only. If nodes wrapped onto a second
+     row, the wrapped row's connector line would overlap the row above it. */
+  flex-wrap: nowrap;
   justify-content: center;
+  width: 100%;
 }
 
 .tech__node {
@@ -42,12 +46,19 @@
   font-weight: 600;
   color: var(--flash-gray-300);
   position: relative;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.tech__node span {
+  text-align: center;
 }
 
 .tech__connector {
   position: absolute;
   top: -3.2rem;
   left: 50%;
+  transform: translateX(-50%);
   width: 1px;
   height: 2.5rem;
   background: rgba(245,158,11,0.3);
@@ -63,4 +74,40 @@
   border: var(--border-light);
   background: var(--flash-surface);
   color: var(--flash-amber-400);
+  flex-shrink: 0;
+}
+
+/* Scale the whole diagram down on narrow viewports so three nodes always
+   fit on one line without the badges/labels colliding or the connector
+   lines drifting away from their badges. */
+@media (max-width: 480px) {
+  .tech__nodes {
+    gap: var(--space-4);
+    margin-top: var(--space-8);
+  }
+
+  .tech__node {
+    font-size: 0.7rem;
+    gap: var(--space-2);
+  }
+
+  .tech__node-badge {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .tech__connector {
+    height: 1.75rem;
+    top: -2.35rem;
+  }
+
+  .tech__hub {
+    width: 5rem;
+    height: 5rem;
+    font-size: var(--text-base);
+  }
+
+  .tech__diagram {
+    margin-top: var(--space-14);
+  }
 }
