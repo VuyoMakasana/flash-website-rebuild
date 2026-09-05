@@ -1,0 +1,61 @@
+/* ============================================================
+   ambient.css — premium depth pass.
+   Two things, both purely additive (no layout/content changes):
+
+   1. A near-invisible film-grain texture over the whole page. Flat
+      digital black reads cheap/"AI-generated"; a faint grain is the
+      standard trick (Linear, Vercel, Stripe all do this) to make a
+      dark UI feel lit and physical instead of a flat color fill.
+
+   2. Soft ambient background blooms behind the sections that were
+      plain flat black (Hero/Shopping/FinalCTA already had their own
+      glows — this extends the same language to WhyFlash, HowItWorks,
+      Technology, and the Stores/Drivers partner sections so the whole
+      page feels cohesively lit rather than three lit spots in a flat
+      black page).
+   ============================================================ */
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Grain itself doesn't move, but keep this block for parity with the
+     rest of the codebase's reduced-motion handling — nothing to change. */
+}
+
+.why,
+.how,
+.tech,
+.partner {
+  position: relative;
+  overflow: hidden;
+}
+
+.why::before,
+.how::before,
+.tech::before,
+.partner::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: -8%;
+  width: min(1100px, 160vw);
+  height: 520px;
+  transform: translateX(-50%);
+  filter: blur(90px);
+  pointer-events: none;
+}
+
+.why::before    { background: var(--glow-amber-soft); }
+.how::before    { background: var(--glow-violet-soft); }
+.tech::before   { background: var(--glow-amber-soft); }
+.partner::before{ background: var(--glow-violet-soft); }

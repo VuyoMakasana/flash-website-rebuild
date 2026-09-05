@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import { AudioProvider } from './context/AudioContext';
 import Splash from './components/Splash';
 import Layout from './components/Layout';
@@ -28,6 +29,11 @@ export default function App() {
           Mounted once here, above the router, so it never re-triggers on
           route changes. */}
       <Splash />
+
+      {/* Vercel Web Analytics — page-view tracking only, no cookies, no PII.
+          Mounted once here (like Splash above), independent of the router,
+          so it doesn't remount on route changes. */}
+      <Analytics />
 
       <Routes>
         <Route element={<Layout />}>

@@ -73,9 +73,15 @@
   --border-light:   1px solid rgba(255,255,255,0.14);
   --border-amber:   1px solid rgba(245,158,11,0.28);
 
-  --shadow-amber:  0 8px 32px rgba(245,158,11,0.22);
-  --shadow-card:   0 4px 24px rgba(0,0,0,0.5);
+  --shadow-amber:  0 8px 32px rgba(245,158,11,0.24), 0 2px 10px rgba(245,158,11,0.16);
+  --shadow-card:   0 24px 48px -20px rgba(0,0,0,0.65), 0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
   --shadow-nav:    0 1px 0 rgba(255,255,255,0.06);
+
+  /* Reusable ambient background blooms — soft, low-opacity radial glows
+     dropped behind otherwise-flat sections so the page reads as lit and
+     dimensional rather than flat black slabs stacked on top of each other. */
+  --glow-amber-soft:  radial-gradient(ellipse, rgba(245,158,11,0.09), transparent 70%);
+  --glow-violet-soft: radial-gradient(ellipse, rgba(120,90,255,0.07), transparent 70%);
 
   --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in:   cubic-bezier(0.4, 0, 1, 1);
