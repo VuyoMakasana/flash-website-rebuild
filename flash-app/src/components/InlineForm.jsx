@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Reveal from './Reveal';
+import { API_BASE } from '../config/api';
 import './InlineForm.css';
-
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 /**
  * Shared form for driver/seller applications and the contact page.

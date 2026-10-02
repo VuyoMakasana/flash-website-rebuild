@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import Reveal from '../components/Reveal';
+import { API_BASE } from '../config/api';
 import './FinalCTA.css';
-
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 const ROLES = [
   { value: 'customer', label: 'Customer' },
