@@ -1,8 +1,7 @@
 const express = require('express');
-const { createStore } = require('../lib/fileStore');
+const { addContactMessage } = require('../lib/store');
 
 const router = express.Router();
-const contactStore = createStore('contact-messages.json');
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const VALID_SUBJECTS = new Set([
@@ -31,7 +30,7 @@ router.post('/contact', async (req, res) => {
   }
 
   try {
-    await contactStore.addEntry({
+    await addContactMessage({
       name: name.trim(),
       email: email.trim().toLowerCase(),
       subject: subject || 'general',

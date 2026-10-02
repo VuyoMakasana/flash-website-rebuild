@@ -1,10 +1,7 @@
 const express = require('express');
-const { createStore } = require('../lib/fileStore');
+const { addApplication } = require('../lib/store');
 
 const router = express.Router();
-
-const driverStore = createStore('driver-applications.json');
-const sellerStore = createStore('seller-applications.json');
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_LEN = { name: 120, city: 60, message: 2000 };
@@ -32,7 +29,8 @@ router.post('/applications/driver', async (req, res) => {
 
   const { name, email, city, message } = req.body;
   try {
-    await driverStore.addEntry({
+    await addApplication({
+      type: 'driver',
       name: name.trim(),
       email: email.trim().toLowerCase(),
       city: (city || '').trim(),
@@ -51,7 +49,8 @@ router.post('/applications/seller', async (req, res) => {
 
   const { name, email, city, message } = req.body;
   try {
-    await sellerStore.addEntry({
+    await addApplication({
+      type: 'seller',
       name: name.trim(),
       email: email.trim().toLowerCase(),
       city: (city || '').trim(),

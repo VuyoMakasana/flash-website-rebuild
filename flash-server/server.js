@@ -6,6 +6,7 @@ const rateLimit = require('express-rate-limit');
 const waitlistRouter = require('./routes/waitlist');
 const applicationsRouter = require('./routes/applications');
 const contactRouter = require('./routes/contact');
+const adminRouter = require('./routes/admin');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -41,6 +42,7 @@ app.use('/api', writeLimiter);
 app.use('/api', waitlistRouter);
 app.use('/api', applicationsRouter);
 app.use('/api', contactRouter);
+app.use('/api', adminRouter);
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {

@@ -1,5 +1,5 @@
 const express = require('express');
-const { addEntry, findByEmail } = require('../lib/waitlistStore');
+const { joinWaitlist } = require('../lib/store');
 
 const router = express.Router();
 
@@ -21,14 +21,12 @@ router.post('/waitlist', async (req, res) => {
   const cleanEmail = email.trim().toLowerCase();
 
   try {
-    const existing = await findByEmail(cleanEmail);
-    if (existing) {
+    const created = await joinWaitlist({ email: cleanEmail, role: role || 'customer' });
+    if (!created) {
       // Idempotent from the client's point of view — already on the list
       // is a success state, not an error.
       return res.status(200).json({ status: 'already-joined' });
     }
-
-    await addEntry({ email: cleanEmail, role: role || 'customer' });
     return res.status(201).json({ status: 'joined' });
   } catch (err) {
     // eslint-disable-next-line no-console
