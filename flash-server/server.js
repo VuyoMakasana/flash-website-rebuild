@@ -13,6 +13,11 @@ const PORT = process.env.PORT || 4000;
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'http://localhost:5173';
 
 app.disable('x-powered-by');
+// Behind exactly one proxy (Vercel's edge), which overwrites X-Forwarded-For
+// with the real client IP. Trusting one hop makes req.ip — and so the rate
+// limiter's key — the client, not the proxy. Don't raise this: trusting
+// more hops would let clients spoof their IP via X-Forwarded-For.
+app.set('trust proxy', 1);
 app.use(helmet());
 app.use(
   cors({
