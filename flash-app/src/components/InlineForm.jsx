@@ -126,7 +126,7 @@ export default function InlineForm({ endpoint, submitLabel, successMessage, sele
 
       {status === 'loading' && slow && (
         <p className="inline-form__hint" role="status">
-          Still working \u2014 the first request can take a little longer to wake up. Hang tight.
+          Still working &mdash; the first request can take a little longer to wake up. Hang tight.
         </p>
       )}
 

@@ -8,11 +8,15 @@ import { createContext, useContext, useEffect, useRef, useState, useCallback } f
  * - Never restarts on navigation/re-render — this provider persists
  *   for the lifetime of the app, and the section components never
  *   touch the element directly.
- * - Attempts autoplay on mount; if the browser blocks it (iOS Safari,
- *   Chrome's autoplay policy, etc.) we fail silently into a "muted,
- *   awaiting activation" state and expose that via `needsActivation`
- *   so the UI can show a subtle control instead of pretending it's
- *   already playing.
+ * - Never downloads the (~2.9MB) track up front. The element is created
+ *   with preload="none" and nothing calls play() until the user presses
+ *   the sound control, so visitors who never turn sound on — most of
+ *   them, especially on mobile — never fetch it. Browsers block unmuted
+ *   autoplay on a first visit anyway (iOS Safari, Chrome's autoplay
+ *   policy, etc.), so an autoplay attempt on mount only ever cost the
+ *   download. Until activation we sit in the "awaiting activation" state
+ *   and expose it via `needsActivation` so the UI shows a subtle control
+ *   instead of pretending it's already playing.
  * - User's mute preference is persisted to localStorage and restored
  *   on the next visit.
  * - Tab backgrounding / OS-level audio suspension is not fought —
@@ -25,7 +29,6 @@ const STORAGE_KEY = 'flash-audio-muted';
 export function AudioProvider({ children, src }) {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [needsActivation, setNeedsActivation] = useState(false);
   const [isMuted, setIsMuted] = useState(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -34,12 +37,16 @@ export function AudioProvider({ children, src }) {
       return false;
     }
   });
+  // Nothing plays until the user activates it; a visitor who previously
+  // muted just sees the "unmute" control instead.
+  const [needsActivation, setNeedsActivation] = useState(() => !isMuted);
 
   // Create the single audio element once.
   useEffect(() => {
     const audio = new Audio(src);
     audio.loop = true;
-    audio.preload = 'auto';
+    // Don't fetch the file until the first play() — see the note above.
+    audio.preload = 'none';
     audio.volume = 0.35;
     audio.muted = isMuted;
     audioRef.current = audio;
@@ -48,15 +55,6 @@ export function AudioProvider({ children, src }) {
     const handlePause = () => setIsPlaying(false);
     audio.addEventListener('play', handlePlay);
     audio.addEventListener('pause', handlePause);
-
-    // Attempt autoplay once. Browsers that block it reject the promise —
-    // we treat that as "needs a user gesture," never retry silently in a loop.
-    const attempt = audio.play();
-    if (attempt !== undefined) {
-      attempt
-        .then(() => setNeedsActivation(false))
-        .catch(() => setNeedsActivation(true));
-    }
 
     return () => {
       audio.removeEventListener('play', handlePlay);

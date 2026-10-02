@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import Reveal from '../components/Reveal';
 import { HOW_IT_WORKS_TRACKS } from '../data/howItWorksContent';
@@ -36,7 +37,7 @@ export default function HowItWorksPage() {
             </div>
 
             <Reveal delay={460} className="track__cta">
-              <a className="btn btn--primary" href={track.cta.href}>{track.cta.label}</a>
+              <Link className="btn btn--primary" to={track.cta.href}>{track.cta.label}</Link>
             </Reveal>
           </div>
         </section>
