@@ -57,19 +57,8 @@ flash-app/                     React frontend (Vite + React Router)
   public/audio/background.m4a  Real audio asset carried over from the existing repo
   public/brand/flash-logo.png  Existing logo asset
 
-flash-app/api/index.js         Vercel function entry — serves flash-server at /api
+flash-app/src/config/api.js    API base URL for the forms (see section 10)
 flash-app/public/              robots.txt, sitemap.xml, og-image.png (plus audio/brand)
-
-flash-server/                  Express backend
-  server.js                    Entry point — helmet, CORS, trust proxy, rate limiting
-  routes/
-    waitlist.js                POST /api/waitlist
-    applications.js            POST /api/applications/driver, /api/applications/seller
-    contact.js                 POST /api/contact
-    admin.js                   GET  /api/admin/export (token-protected)
-  lib/
-    supabase.js                Server-only Supabase (PostgREST) client
-    store.js                   All reads/writes to the flash_site_* tables
 ```
 
 ## 3. Technologies used
@@ -77,14 +66,13 @@ flash-server/                  Express backend
 - **Frontend:** React 19 + Vite + React Router (client-side routing — no
   server-side rendering, see the SEO caveat in section 13). Plain CSS, no
   Tailwind, no CSS-in-JS, no animation library.
-- **Backend:** Node.js + Express.
+- **Backend:** none in this repo — the forms post to the main Flash-App
+  backend (see section 10).
 
 ## 4. Dependencies added
 
 Frontend: `react`, `react-dom`, `react-router-dom`.
 
-Backend: `express`, `cors`, `helmet`, `express-rate-limit`, `dotenv`,
-`@supabase/postgrest-js`.
 
 
 ## 5. How the audio system works
@@ -142,88 +130,50 @@ treatment applied consistently to the whole editorial section.
 
 ## 10. How the backend works
 
-Three endpoint groups, all with the same posture — validated server-side,
-rate-limited, no secrets hardcoded:
+This repo has no backend of its own. The four forms post to the production
+Flash-App backend (`api.flashdelivery.co.za`, repo `VuyoMakasana/Flash-App`,
+`backend/src/routes/marketingRoutes.js`), which validates them, stores them
+in its `marketing_waitlist`, `marketing_contact_messages` and
+`marketing_applications` tables (visible in AdminJS), and emails the admin
+on every new lead.
 
-- `POST /api/waitlist` — email + role. Duplicate email is treated as an
-  idempotent success, not an error.
+- `POST /api/waitlist` — email + role.
 - `POST /api/applications/driver` and `POST /api/applications/seller` —
-  name, email, city, message. Backs the real application forms on the
-  Drivers and Stores pages.
+  name, email, city, message. Back the application forms on the Drivers and
+  Stores pages.
 - `POST /api/contact` — name, email, subject (validated against a fixed
   set), message. Backs the Contact page form.
 
-- `GET /api/admin/export` — read/export everything that's been submitted.
-  Send the `x-admin-token` header (value of `ADMIN_EXPORT_TOKEN`).
-  `?type=waitlist|applications|contact|all` (default `all`),
-  `?format=json|csv` (CSV needs a single type). Returns 404 unless
-  `ADMIN_EXPORT_TOKEN` is set to at least 32 characters.
+The base URL lives in `flash-app/src/config/api.js`: it defaults to
+`https://api.flashdelivery.co.za/api`, and `VITE_API_URL` overrides it at
+build time (e.g. for a staging backend). The requests are plain JSON POSTs
+with no credentials. The backend's CORS allowlist (`APP_URL` /
+`ALLOWED_ORIGINS`) must include the site's origin — the production domain
+is allowed; Vercel preview URLs are not unless added there.
 
-  ```
-  curl -H "x-admin-token: $ADMIN_EXPORT_TOKEN"     "https://flashdelivery.co.za/api/admin/export?type=waitlist&format=csv" -o waitlist.csv
-  ```
-
-`helmet()` sets standard security headers; CORS is locked to
-`ALLOWED_ORIGIN` (set in `.env`, template in `.env.example`).
-`trust proxy` is set to one hop so the rate limiter sees real client IPs
-behind Vercel.
-
-**A bug was caught and fixed during testing, not just written and assumed
-correct:** the rate limiter was originally mounted separately on each of
-the three `app.use('/api', ...)` calls. Express runs every middleware
-mounted at a matching path prefix, so a single request was passing through
-the limiter three times — meaning real users would've hit "too many
-requests" after roughly 3-4 actual actions, not the intended 20. Caught by
-sending a sequence of real curl requests and watching it fail sooner than
-it should have; fixed by mounting the limiter exactly once, ahead of all
-three routers.
-
-**Storage:** Supabase (the `flash-db` project), in three tables used only
-by this site — `flash_site_waitlist`, `flash_site_applications`,
-`flash_site_contact`. They're deliberately separate from the Flash app's
-own tables (including the older `marketing_*` ones). RLS is on with no
-policies and anon/authenticated access is revoked, so only the server's
-service-role key can read them. Every write is a single INSERT; waitlist
-dedupe is a UNIQUE constraint on `email` with ON CONFLICT DO NOTHING, so
-concurrent submissions can't drop or duplicate entries.
-
-**Deployment:** the API runs as a Vercel function in the same project as
-the site (`flash-app/api/index.js` imports `flash-server/server.js`;
-`flash-app/vercel.json` rewrites `/api/*` to it and installs
-flash-server's dependencies). Required Vercel env vars: `SUPABASE_URL`,
-`SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_EXPORT_TOKEN`. `VITE_API_URL` must be
-**unset** in production so the forms call same-origin `/api`.
+An earlier standalone `flash-server/` Express app lived in this repo; it was
+superseded by the Flash-App backend's marketing routes and removed (it's
+still in git history).
 
 ## 11. How to run locally
 
-**Backend:**
-```
-cd flash-server
-cp .env.example .env   # then fill in SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY
-npm install
-npm run start
-```
-Runs on `http://localhost:4000`. Without the Supabase vars the server still
-starts and `/api/health` answers, but form submissions return 500.
-
-**Frontend:**
 ```
 cd flash-app
-cp .env.example .env
 npm install
 npm run dev
 ```
-Runs on `http://localhost:5173` (or the port Vite picks).
+Runs on `http://localhost:5173` (or the port Vite picks). The forms post to
+the production backend by default; local origins aren't on its CORS
+allowlist, so form submissions from a dev server fail unless you set
+`VITE_API_URL` (see `.env.example`) to a backend that allows them.
 
 ## 12. Build production
 
 ```
 cd flash-app && npm run build      # outputs to flash-app/dist
-# Production: push to Vercel — the site and /api deploy together (see section 10).
 ```
 
-Frontend build was run and verified clean (`vite build`, 0 errors). Backend
-routes were verified with live curl requests, not just read.
+Deployed by Vercel (`flash-website-rebuild` project) as a static SPA.
 
 ## 13. What still requires real FLASH data
 
@@ -234,8 +184,8 @@ routes were verified with live curl requests, not just read.
   values, those should replace these.
 - FAQ answers about driver/seller onboarding are generic placeholders — real
   requirements and process details need to come from you.
-- Signups are stored in Supabase and exportable via `/api/admin/export`,
-  but there's no email confirmation or new-signup notification wired up.
+- Signups land in the Flash-App backend (AdminJS + admin email per lead);
+  there's no confirmation email to the person who signed up.
 - Legal pages (Privacy, Terms, Cookies, Security, Accessibility) and contact
   emails are built. Social media links are not — no official accounts were
   provided.
