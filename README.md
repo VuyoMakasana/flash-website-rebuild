@@ -57,16 +57,19 @@ flash-app/                     React frontend (Vite + React Router)
   public/audio/background.m4a  Real audio asset carried over from the existing repo
   public/brand/flash-logo.png  Existing logo asset
 
+flash-app/api/index.js         Vercel function entry — serves flash-server at /api
+flash-app/public/              robots.txt, sitemap.xml, og-image.png (plus audio/brand)
+
 flash-server/                  Express backend
-  server.js                    Entry point — helmet, CORS, rate limiting
+  server.js                    Entry point — helmet, CORS, trust proxy, rate limiting
   routes/
     waitlist.js                POST /api/waitlist
     applications.js            POST /api/applications/driver, /api/applications/seller
     contact.js                 POST /api/contact
+    admin.js                   GET  /api/admin/export (token-protected)
   lib/
-    waitlistStore.js           JSON-file storage for waitlist
-    fileStore.js                Generalized JSON-file storage used by applications/contact
-  data/                        Signup/application/message data (gitignored, seeded empty)
+    supabase.js                Server-only Supabase (PostgREST) client
+    store.js                   All reads/writes to the flash_site_* tables
 ```
 
 ## 3. Technologies used
@@ -80,16 +83,18 @@ flash-server/                  Express backend
 
 Frontend: `react`, `react-dom`, `react-router-dom`.
 
-Backend: `express`, `cors`, `helmet`, `express-rate-limit`, `dotenv`.
+Backend: `express`, `cors`, `helmet`, `express-rate-limit`, `dotenv`,
+`@supabase/postgrest-js`.
 
 
 ## 5. How the audio system works
 
 One `<audio>` element, created once in `AudioContext.jsx` and never
-re-mounted. On load it attempts `audio.play()`; if the browser's autoplay
-policy blocks it (this is expected on iOS Safari and most mobile Chrome),
-the promise rejects and the app falls into a `needsActivation` state instead
-of retrying in a loop or faking playback. The `AudioControl` button reflects
+re-mounted. It's created with `preload="none"` and nothing plays (or
+downloads) until the visitor presses the sound control, so the ~2.9MB track
+is never fetched by people who don't turn sound on. Browsers block unmuted
+autoplay on a first visit anyway (iOS Safari, Chrome's autoplay policy), so
+the app starts in a `needsActivation` state instead of faking playback. The `AudioControl` button reflects
 three real states — off, needs activation, playing — never a fourth fake one.
 Mute preference is stored in `localStorage` and restored on next visit.
 Navigating the page never touches the audio element, so it can't restart.
@@ -148,8 +153,20 @@ rate-limited, no secrets hardcoded:
 - `POST /api/contact` — name, email, subject (validated against a fixed
   set), message. Backs the Contact page form.
 
+- `GET /api/admin/export` — read/export everything that's been submitted.
+  Send the `x-admin-token` header (value of `ADMIN_EXPORT_TOKEN`).
+  `?type=waitlist|applications|contact|all` (default `all`),
+  `?format=json|csv` (CSV needs a single type). Returns 404 unless
+  `ADMIN_EXPORT_TOKEN` is set to at least 32 characters.
+
+  ```
+  curl -H "x-admin-token: $ADMIN_EXPORT_TOKEN"     "https://flashdelivery.co.za/api/admin/export?type=waitlist&format=csv" -o waitlist.csv
+  ```
+
 `helmet()` sets standard security headers; CORS is locked to
 `ALLOWED_ORIGIN` (set in `.env`, template in `.env.example`).
+`trust proxy` is set to one hop so the rate limiter sees real client IPs
+behind Vercel.
 
 **A bug was caught and fixed during testing, not just written and assumed
 correct:** the rate limiter was originally mounted separately on each of
@@ -161,24 +178,33 @@ sending a sequence of real curl requests and watching it fail sooner than
 it should have; fixed by mounting the limiter exactly once, ahead of all
 three routers.
 
-**Documented limitation:** storage is a JSON file on disk per endpoint
-group (`lib/waitlistStore.js`, `lib/fileStore.js`), each guarded by an
-in-process write queue. Fine for a single-instance MVP — every endpoint was
-verified end-to-end with live curl requests, not just read for correctness.
-Will **not** survive a multi-instance or serverless deployment and has no
-export/admin view. Swapping in a real database only requires rewriting
-those two files.
+**Storage:** Supabase (the `flash-db` project), in three tables used only
+by this site — `flash_site_waitlist`, `flash_site_applications`,
+`flash_site_contact`. They're deliberately separate from the Flash app's
+own tables (including the older `marketing_*` ones). RLS is on with no
+policies and anon/authenticated access is revoked, so only the server's
+service-role key can read them. Every write is a single INSERT; waitlist
+dedupe is a UNIQUE constraint on `email` with ON CONFLICT DO NOTHING, so
+concurrent submissions can't drop or duplicate entries.
+
+**Deployment:** the API runs as a Vercel function in the same project as
+the site (`flash-app/api/index.js` imports `flash-server/server.js`;
+`flash-app/vercel.json` rewrites `/api/*` to it and installs
+flash-server's dependencies). Required Vercel env vars: `SUPABASE_URL`,
+`SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_EXPORT_TOKEN`. `VITE_API_URL` must be
+**unset** in production so the forms call same-origin `/api`.
 
 ## 11. How to run locally
 
 **Backend:**
 ```
 cd flash-server
-cp .env.example .env
+cp .env.example .env   # then fill in SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY
 npm install
-npm run start    # or: node server.js
+npm run start
 ```
-Runs on `http://localhost:4000`.
+Runs on `http://localhost:4000`. Without the Supabase vars the server still
+starts and `/api/health` answers, but form submissions return 500.
 
 **Frontend:**
 ```
@@ -193,7 +219,7 @@ Runs on `http://localhost:5173` (or the port Vite picks).
 
 ```
 cd flash-app && npm run build      # outputs to flash-app/dist
-cd flash-server && node server.js  # run behind a process manager (pm2, systemd) in production
+# Production: push to Vercel — the site and /api deploy together (see section 10).
 ```
 
 Frontend build was run and verified clean (`vite build`, 0 errors). Backend
@@ -208,9 +234,11 @@ routes were verified with live curl requests, not just read.
   values, those should replace these.
 - FAQ answers about driver/seller onboarding are generic placeholders — real
   requirements and process details need to come from you.
-- Waitlist emails currently just sit in a JSON file; there's no email
-  confirmation or notification system wired up.
-- Social links, contact details, and legal pages are not part of this build.
+- Signups are stored in Supabase and exportable via `/api/admin/export`,
+  but there's no email confirmation or new-signup notification wired up.
+- Legal pages (Privacy, Terms, Cookies, Security, Accessibility) and contact
+  emails are built. Social media links are not — no official accounts were
+  provided.
 
 ## 14. Limitations caused by browser/device policies
 
@@ -228,15 +256,15 @@ routes were verified with live curl requests, not just read.
 
 ## 15. SEO caveat specific to this being a client-rendered SPA
 
-Each page sets its own `document.title` and meta description via a
-`usePageMeta` hook, mirroring the original static site's distinct
+Each page sets its own `document.title`, meta description, canonical URL
+and Open Graph/Twitter tags via a `usePageMeta` hook, mirroring the original static site's distinct
 per-page `<title>` tags. But because this is a client-rendered SPA with
 no server-side rendering, that update only happens after JavaScript runs.
 A search crawler or social-media link-unfurler that doesn't execute JS
 will see `index.html`'s default title/description for every page, not the
-per-page one. The original static site didn't have this problem — every
+per-page one. (`index.html` deliberately has no static canonical or
+`og:url`, so those crawlers see no canonical rather than a wrong one; the
+shared `og-image.png` is static and works everywhere.) The original static site didn't have this problem — every
 `.html` file had its real title baked in server-side. Fixing this properly
 means adding server-side rendering or a prerendering step; flagged here
 rather than left as a silent regression.
-#   f l a s h - w e b s i t e - r e b u i l d  
- 
