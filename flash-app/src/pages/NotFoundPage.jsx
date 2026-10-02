@@ -11,7 +11,7 @@ const SUGGESTIONS = [
 ];
 
 export default function NotFoundPage() {
-  usePageMeta('Page Not Found — Flash', "The page you're looking for doesn't exist.");
+  usePageMeta('Page Not Found — Flash', "The page you're looking for doesn't exist.", { noindex: true });
 
   return (
     <section style={{ textAlign: 'center', padding: 'var(--space-32) 0' }}>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Keep in sync with the <Route> list in src/App.jsx (404 route excluded). -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://flashdelivery.co.za/</loc></url>
+  <url><loc>https://flashdelivery.co.za/about</loc></url>
+  <url><loc>https://flashdelivery.co.za/how-it-works</loc></url>
+  <url><loc>https://flashdelivery.co.za/stores</loc></url>
+  <url><loc>https://flashdelivery.co.za/drivers</loc></url>
+  <url><loc>https://flashdelivery.co.za/investors</loc></url>
+  <url><loc>https://flashdelivery.co.za/faq</loc></url>
+  <url><loc>https://flashdelivery.co.za/contact</loc></url>
+  <url><loc>https://flashdelivery.co.za/careers</loc></url>
+  <url><loc>https://flashdelivery.co.za/press</loc></url>
+  <url><loc>https://flashdelivery.co.za/privacy</loc></url>
+  <url><loc>https://flashdelivery.co.za/terms</loc></url>
+  <url><loc>https://flashdelivery.co.za/cookies</loc></url>
+  <url><loc>https://flashdelivery.co.za/security</loc></url>
+  <url><loc>https://flashdelivery.co.za/accessibility</loc></url>
+</urlset>
