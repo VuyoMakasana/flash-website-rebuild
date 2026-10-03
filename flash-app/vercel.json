@@ -1,3 +1,26 @@
 {
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "flash-website-rebuild.vercel.app" }],
+      "destination": "https://flashdelivery.co.za/$1",
+      "statusCode": 301
+    },
+    { "source": "/index.html", "destination": "/", "statusCode": 301 },
+    { "source": "/about.html", "destination": "/about", "statusCode": 301 },
+    { "source": "/how-it-works.html", "destination": "/how-it-works", "statusCode": 301 },
+    { "source": "/merchant-partners.html", "destination": "/stores", "statusCode": 301 },
+    { "source": "/driver-partners.html", "destination": "/drivers", "statusCode": 301 },
+    { "source": "/investors.html", "destination": "/investors", "statusCode": 301 },
+    { "source": "/faq.html", "destination": "/faq", "statusCode": 301 },
+    { "source": "/contact.html", "destination": "/contact", "statusCode": 301 },
+    { "source": "/careers.html", "destination": "/careers", "statusCode": 301 },
+    { "source": "/press.html", "destination": "/press", "statusCode": 301 },
+    { "source": "/privacy.html", "destination": "/privacy", "statusCode": 301 },
+    { "source": "/terms.html", "destination": "/terms", "statusCode": 301 },
+    { "source": "/cookies.html", "destination": "/cookies", "statusCode": 301 },
+    { "source": "/security.html", "destination": "/security", "statusCode": 301 },
+    { "source": "/accessibility.html", "destination": "/accessibility", "statusCode": 301 }
+  ],
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }

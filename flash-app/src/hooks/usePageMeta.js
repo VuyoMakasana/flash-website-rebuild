@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-// Primary production origin. www.flashdelivery.co.za 307-redirects here,
+// Primary production origin. www.flashdelivery.co.za redirects here,
 // so canonicals must point at the apex domain, not www.
 export const SITE_URL = 'https://flashdelivery.co.za';
 
