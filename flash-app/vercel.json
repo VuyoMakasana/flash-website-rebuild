@@ -22,5 +22,5 @@
     { "source": "/security.html", "destination": "/security", "statusCode": 301 },
     { "source": "/accessibility.html", "destination": "/accessibility", "statusCode": 301 }
   ],
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [{ "source": "/(.*)", "destination": "/shell.html" }]
 }

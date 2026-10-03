@@ -8,9 +8,43 @@
     <title>FLASH — Same-Day Clothing Delivery | Port Elizabeth, South Africa</title>
     <meta name="description" content="FLASH is a same-day clothing delivery platform launching in Gqeberha, Port Elizabeth. Local sellers, local drivers, delivered today. Coming soon." />
     <meta name="keywords" content="FLASH, same-day delivery, clothing delivery, Port Elizabeth, Gqeberha, South Africa, fashion delivery" />
-    <!-- No static canonical / og:url: this one file is served for every
-         route, so a hardcoded value would mark every page as the homepage.
-         usePageMeta sets the correct per-route values at runtime. -->
+    <!-- homepage-only:start
+         Everything up to homepage-only:end is served at / only. The build
+         writes shell.html (this file minus this block) and vercel.json
+         serves it for every other route, so no other page claims the
+         homepage's canonical or structured data. usePageMeta keeps
+         canonical / og:url / twitter:url correct per route at runtime. -->
+    <link rel="canonical" href="https://flashdelivery.co.za/" />
+    <meta property="og:url" content="https://flashdelivery.co.za/" />
+    <meta name="twitter:url" content="https://flashdelivery.co.za/" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "@id": "https://flashdelivery.co.za/#organization",
+        "name": "Flash",
+        "url": "https://flashdelivery.co.za/",
+        "logo": "https://flashdelivery.co.za/brand/flash-logo.png",
+        "sameAs": ["https://www.linkedin.com/company/flash-delivery-sa"],
+        "areaServed": [
+          { "@type": "City", "name": "Gqeberha" },
+          { "@type": "AdministrativeArea", "name": "Nelson Mandela Bay" }
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "@id": "https://flashdelivery.co.za/#founder",
+        "name": "Vuyo Makasana",
+        "jobTitle": "Founder & CEO",
+        "worksFor": { "@type": "Organization", "@id": "https://flashdelivery.co.za/#organization", "name": "Flash" },
+        "sameAs": ["https://www.linkedin.com/in/vuyo-makasana"],
+        "homeLocation": { "@type": "City", "name": "Gqeberha" }
+      }
+    </script>
+    <!-- homepage-only:end -->
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="FLASH" />

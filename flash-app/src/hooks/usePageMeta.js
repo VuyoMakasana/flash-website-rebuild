@@ -7,12 +7,14 @@ export const SITE_URL = 'https://flashdelivery.co.za';
 
 /**
  * Sets the per-route document title, meta description, canonical URL and
- * Open Graph / Twitter title, description and URL.
+ * Open Graph / Twitter title, description and URL (og:url, twitter:url).
  *
- * This SPA has no server-side rendering, so index.html only carries shared
- * defaults (and deliberately no canonical / og:url, which would otherwise
- * claim every page is the homepage to non-JS crawlers). Each page calls
- * this hook to fill in the real values client-side.
+ * This SPA has no server-side rendering. index.html carries the homepage's
+ * canonical / og:url / twitter:url statically, inside a block that is
+ * stripped from shell.html (served for every other route — see
+ * vite.config.js), so non-JS crawlers never see the homepage's URL on
+ * another page. Each page calls this hook to set the real values
+ * client-side.
  *
  * Known limitation: because this only updates the DOM after JS runs,
  * a crawler or social-media unfurler that doesn't execute JavaScript
@@ -98,6 +100,7 @@ export function usePageMeta(title, description, { noindex = false } = {}) {
         )
       );
       restore.push(setMeta('property', 'og:url', url));
+      restore.push(setMeta('name', 'twitter:url', url));
     }
 
     return () => {

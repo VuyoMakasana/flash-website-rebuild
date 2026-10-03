@@ -9,22 +9,7 @@ import Technology from '../sections/Technology';
 import PortElizabeth from '../sections/PortElizabeth';
 import Founder from '../sections/Founder';
 import FinalCTA from '../sections/FinalCTA';
-import { usePageMeta, SITE_URL } from '../hooks/usePageMeta';
-
-// Organization structured data, homepage only. The LinkedIn URL is the
-// company page linked from the original flashdelivery site's footer.
-const ORGANIZATION_JSON_LD = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'Flash',
-  url: `${SITE_URL}/`,
-  logo: `${SITE_URL}/brand/flash-logo.png`,
-  sameAs: ['https://www.linkedin.com/company/flash-delivery-sa'],
-  areaServed: [
-    { '@type': 'City', name: 'Gqeberha' },
-    { '@type': 'AdministrativeArea', name: 'Nelson Mandela Bay' },
-  ],
-};
+import { usePageMeta } from '../hooks/usePageMeta';
 
 export default function Home() {
   usePageMeta(
@@ -34,11 +19,6 @@ export default function Home() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        // Static, hand-written object — no user input reaches this.
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSON_LD) }}
-      />
       <Hero />
       <WhyFlash />
       <HowItWorks />
