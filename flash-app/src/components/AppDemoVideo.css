@@ -1,0 +1,31 @@
+.app-demo {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 22rem;
+}
+
+@media (min-width: 640px) {
+  .app-demo { max-width: 26rem; }
+}
+
+@media (min-width: 960px) {
+  .app-demo { max-width: 30rem; }
+}
+
+.app-demo__video {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Space is reserved before the video loads, so nothing on the page jumps. */
+  aspect-ratio: 1080 / 1446;
+  /* Never crop or zoom the picture. */
+  object-fit: contain;
+  /* The video's own background is the page colour (#080808); the soft edge
+     fade lets the hero's glows show through around it. */
+  background: var(--flash-black);
+  -webkit-mask-image: radial-gradient(ellipse 60% 58% at 52% 50%, #000 70%, transparent 100%);
+  mask-image: radial-gradient(ellipse 60% 58% at 52% 50%, #000 70%, transparent 100%);
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}

@@ -1,6 +1,6 @@
 import Reveal from '../components/Reveal';
-import OrderCard from '../components/OrderCard';
-import { IconBolt, IconPin, IconGarment } from '../components/icons';
+import AppDemoVideo from '../components/AppDemoVideo';
+import { IconBolt, IconPin } from '../components/icons';
 import './Hero.css';
 
 export default function Hero() {
@@ -37,19 +37,7 @@ export default function Hero() {
         </div>
 
         <Reveal delay={260} className="hero__visual">
-          <OrderCard
-            eyebrow="Order #FL-2048"
-            pill="Live"
-            title="Denim Jacket · Local Seller"
-            meta="Newton Park, Gqeberha"
-            icon={<IconGarment aria-hidden="true" />}
-            steps={[
-              { label: 'Order confirmed' },
-              { label: 'Seller preparing' },
-              { label: 'Driver collected' },
-              { label: 'Delivered' },
-            ]}
-          />
+          <AppDemoVideo />
         </Reveal>
       </div>
     </section>
